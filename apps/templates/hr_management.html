@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>HR Management</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+  <style>
+    body{
+      margin:0;
+      font-family:Poppins, sans-serif;
+      background:#eef1f7;
+    }
+
+    .wrapper{
+      max-width:1100px;
+      margin:40px auto;
+      background:#fff;
+      padding:24px 26px;
+      border-radius:16px;
+      box-shadow:0 10px 25px rgba(0,0,0,.08);
+    }
+
+    .header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:20px;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .create-btn, .back-btn, .logout-btn{
+      background:#10b981;
+      color:#fff;
+      padding:10px 16px;
+      border-radius:10px;
+      text-decoration:none;
+      font-weight:600;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      border:none;
+      cursor:pointer;
+    }
+
+    .back-btn{ background:#6b7280; }
+    .logout-btn{ background:#ef4444; }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:10px;
+    }
+
+    thead{
+      background:#111827;
+      color:#fff;
+    }
+
+    th,td{
+      padding:10px 12px;
+      font-size:14px;
+      border-bottom:1px solid #e5e7eb;
+      text-align:left;
+    }
+
+    tbody tr:hover{
+      background:#f3f4f6;
+    }
+
+    .actions{
+      display:flex;
+      gap:8px;
+    }
+
+    .btn{
+      padding:6px 10px;
+      border-radius:8px;
+      font-size:12px;
+      font-weight:600;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      cursor:pointer;
+    }
+
+    .btn-edit{background:#3b82f6;color:#fff;}
+    .btn-delete{background:#ef4444;color:#fff;}
+
+    .no-data{
+      text-align:center;
+      padding:16px;
+      color:#6b7280;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+  <!-- ✅ HEADER -->
+  <div class="header">
+    <h2><i class="fas fa-user-tie"></i> Employee Management</h2>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <a href="/admin_dashboard/" class="back-btn">← Dashboard</a>
+
+      <a href="/add_employee/" class="create-btn">
+        + Add Employee
+      </a>
+
+      <a href="/create_hr/" class="create-btn">
+        <i class="fas fa-user-plus"></i> Create HR
+      </a>
+
+      <!-- ✅ LOGOUT FIXED -->
+      <form method="POST" action="/logout/" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">Logout</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ✅ TABLE -->
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Username</th>
+        <th>Role</th>
+        <th style="width:150px;">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% if emp_obj %}
+        {% for hr in emp_obj %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ hr.username }}</td>
+          <td>{{ hr.email }}</td>
+          <td>{{ hr.username }}</td>
+
+          <td>
+            {% if hr.role == 2 %} HR
+            {% elif hr.role == 3 %} Employee
+            {% else %} Admin {% endif %}
+          </td>
+
+          <td>
+            <div class="actions">
+              <a href="/edit_hr/{{ hr.id }}/" class="btn btn-edit">
+                <i class="fas fa-pen"></i> Edit
+              </a>
+
+              <a href="/delete_hr/{{ hr.id }}/"
+                 class="btn btn-delete"
+                 onclick="return confirm('Are you sure?');">
+                <i class="fas fa-trash"></i> Delete
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="6" class="no-data">No users found.</td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+
+</div>
+
+</body>
+</html>

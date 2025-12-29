@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Set Performance Reward Slabs</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  font-family:Poppins, sans-serif;
+  background:linear-gradient(135deg,#eef2ff,#e0f2fe);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.container{
+  width:480px;
+  background:#ffffff;
+  padding:26px 28px;
+  border-radius:16px;
+  box-shadow:0 10px 30px rgba(15,23,42,.2);
+  animation:fadeIn .4s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:none}
+}
+
+h2{
+  text-align:center;
+  margin-bottom:16px;
+  font-size:22px;
+}
+
+/* ✅ LOGOUT BUTTON */
+.logout-btn{
+  background:#ef4444;
+  color:#fff;
+  border:none;
+  padding:8px 14px;
+  border-radius:999px;
+  font-weight:600;
+  cursor:pointer;
+  margin-bottom:14px;
+  float:right;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-bottom:18px;
+}
+
+th, td{
+  padding:10px;
+  text-align:center;
+  border-bottom:1px solid #e5e7eb;
+}
+
+th{
+  background:#4f46e5;
+  color:#fff;
+  font-size:14px;
+}
+
+input{
+  width:90px;
+  padding:8px;
+  border-radius:8px;
+  border:1px solid #cbd5e1;
+  text-align:center;
+  font-weight:600;
+}
+
+input:focus{
+  outline:none;
+  border-color:#4f46e5;
+  box-shadow:0 0 0 2px #c7d2fe;
+}
+
+.rupee{
+  font-weight:700;
+  color:#16a34a;
+}
+
+.submit-btn{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:999px;
+  background:linear-gradient(135deg,#10b981,#059669);
+  color:#fff;
+  font-weight:700;
+  font-size:15px;
+  cursor:pointer;
+  transition:.25s;
+  box-shadow:0 6px 16px rgba(16,185,129,.4);
+}
+
+.submit-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 24px rgba(16,185,129,.6);
+}
+
+.preview{
+  margin-top:18px;
+  background:#f9fafb;
+  border-radius:12px;
+  padding:14px;
+  font-size:14px;
+  border:1px solid #e5e7eb;
+}
+
+.preview span{
+  display:block;
+  margin-top:6px;
+  font-weight:600;
+}
+/* ================== TABLE HOVER EFFECT ================== */
+tbody tr{
+  transition:all .2s ease;
+}
+
+tbody tr:hover{
+  background:#eef2ff;
+  transform:scale(1.01);
+  box-shadow:0 4px 12px rgba(79,70,229,.15);
+}
+
+/* ================== INPUT GLOW ANIMATION ================== */
+input{
+  transition:all .25s ease;
+}
+
+input:hover{
+  border-color:#4f46e5;
+  box-shadow:0 0 0 2px #c7d2fe;
+}
+
+/* ================== SUBMIT BUTTON PULSE ================== */
+.submit-btn{
+  position:relative;
+  overflow:hidden;
+}
+
+.submit-btn::after{
+  content:"";
+  position:absolute;
+  width:0;
+  height:0;
+  border-radius:50%;
+  background:rgba(255,255,255,.4);
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  transition:.5s;
+}
+
+.submit-btn:active::after{
+  width:300px;
+  height:300px;
+}
+
+/* ================== PREVIEW VISUAL UPGRADE ================== */
+.preview{
+  animation:fadeIn .4s ease;
+}
+
+.preview strong{
+  display:block;
+  margin-bottom:8px;
+  font-size:15px;
+  color:#1f2937;
+}
+
+.preview span{
+  background:#eef2ff;
+  border-radius:999px;
+  padding:6px 12px;
+  display:inline-block;
+  margin:6px 4px;
+  font-size:13px;
+  box-shadow:0 4px 10px rgba(79,70,229,.15);
+  transition:all .25s ease;
+}
+
+.preview span:hover{
+  transform:translateY(-2px) scale(1.05);
+  box-shadow:0 6px 18px rgba(79,70,229,.35);
+}
+
+/* ================== PAGINATION BUTTON STYLE ================== */
+.page-btn{
+  padding:6px 14px;
+  border-radius:999px;
+  background:linear-gradient(135deg,#4f46e5,#6366f1);
+  color:#fff;
+  text-decoration:none;
+  font-size:13px;
+  font-weight:600;
+  transition:all .25s ease;
+  box-shadow:0 4px 12px rgba(79,70,229,.45);
+}
+
+.page-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 8px 20px rgba(79,70,229,.6);
+}
+
+/* ================== LOGOUT BUTTON HOVER GLOW ================== */
+.logout-btn{
+  box-shadow:0 4px 10px rgba(239,68,68,.3);
+}
+
+.logout-btn:hover{
+  box-shadow:0 8px 20px rgba(239,68,68,.6);
+}
+
+/* ================== MOBILE RESPONSIVE ================== */
+@media (max-width:600px){
+
+  .container{
+    width:95%;
+    padding:20px;
+  }
+
+  table th, table td{
+    font-size:12px;
+    padding:8px;
+  }
+
+  input{
+    width:70px;
+    font-size:12px;
+  }
+
+  .submit-btn{
+    font-size:14px;
+    padding:10px;
+  }
+
+  .preview span{
+    font-size:12px;
+    padding:5px 10px;
+  }
+
+}
+/* ================== SLAB GROUP (1–4 TOGETHER) ================== */
+.slab-group{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+
+.slab-item{
+  background:linear-gradient(135deg,#eef2ff,#f8fafc);
+  border-radius:14px;
+  padding:10px 6px;
+  text-align:center;
+  font-size:13px;
+  font-weight:600;
+  color:#1f2937;
+  box-shadow:0 4px 12px rgba(79,70,229,.15);
+  transition:.25s;
+}
+
+.slab-item b{
+  display:block;
+  margin-top:4px;
+  color:#16a34a;
+  font-size:14px;
+}
+
+.slab-item:hover{
+  transform:translateY(-4px) scale(1.05);
+  box-shadow:0 10px 22px rgba(79,70,229,.35);
+}
+
+/* ✅ Mobile View */
+@media (max-width:600px){
+  .slab-group{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- ✅ LOGOUT (SEPARATE FORM) -->
+  <form method="POST" action="/logout/" style="text-align:right;">
+    {% csrf_token %}
+    <button type="submit" class="logout-btn">Logout</button>
+  </form>
+
+  <h2>Performance Reward Slabs</h2>
+
+  <!-- ✅ SAVE SLABS FORM -->
+  <form method="POST">
+    {% csrf_token %}
+
+    <table>
+      <thead>
+        <tr>
+          <th>From</th>
+          <th>To</th>
+          <th>Reward (₹)</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td><input type="number" name="from_1" ></td>
+          <td><input type="number" name="to_1" ></td>
+          <td class="rupee">₹ <input type="number" name="price_1" ></td>
+        </tr>
+
+        <tr>
+          <td><input type="number" name="from_2" ></td>
+          <td><input type="number" name="to_2" ></td>
+          <td class="rupee">₹ <input type="number" name="price_2" ></td>
+        </tr>
+
+        <tr>
+          <td><input type="number" name="from_3" ></td>
+          <td><input type="number" name="to_3" ></td>
+          <td class="rupee">₹ <input type="number" name="price_3" ></td>
+        </tr>
+
+        <tr>
+          <td><input type="number" name="from_4" ></td>
+          <td><input type="number" name="to_4" ></td>
+          <td class="rupee">₹ <input type="number" name="price_4" ></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button type="submit" class="submit-btn">✅ Save Reward Slabs</button>
+
+  </form>
+
+ 
+<div class="preview">
+  <strong>Current Mapping Preview:</strong>
+
+  {% if slabs %}
+    {% for slab in slabs %}
+
+      <div class="slab-group">
+        <div class="slab-item">
+          {{ slab.from_score_1 }} – {{ slab.to_score_1 }} <br>
+          <b>₹{{ slab.reward_amount_1 }}</b>
+        </div>
+
+        <div class="slab-item">
+          {{ slab.from_score_2 }} – {{ slab.to_score_2 }} <br>
+          <b>₹{{ slab.reward_amount_2 }}</b>
+        </div>
+
+        <div class="slab-item">
+          {{ slab.from_score_3 }} – {{ slab.to_score_3 }} <br>
+          <b>₹{{ slab.reward_amount_3 }}</b>
+        </div>
+
+        <div class="slab-item">
+          {{ slab.from_score_4 }} – {{ slab.to_score_4 }} <br>
+          <b>₹{{ slab.reward_amount_4 }}</b>
+        </div>
+      </div>
+
+    {% endfor %}
+  {% else %}
+    <span>No reward slabs configured yet.</span>
+  {% endif %}
+</div>
+
+
+  <!-- ✅ PAGINATION CONTROLS -->
+  <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+
+    {% if slabs.has_previous %}
+      <a href="?page={{ slabs.previous_page_number }}" class="page-btn">⬅ Prev</a>
+    {% else %}
+      <span></span>
+    {% endif %}
+
+    <span style="font-weight:600;">
+      Page {{ slabs.number }} of {{ slabs.paginator.num_pages }}
+    </span>
+
+    {% if slabs.has_next %}
+      <a href="?page={{ slabs.next_page_number }}" class="page-btn">Next ➡</a>
+    {% else %}
+      <span></span>
+    {% endif %}
+
+  </div>
+
+</div>
+
+
+
+</div>
+
+</body>
+</html>

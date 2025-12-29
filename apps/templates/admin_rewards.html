@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin Rewards</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+@keyframes fadeUp {
+  from {transform: translateY(20px); opacity: 0;}
+  to {transform: translateY(0); opacity: 1;}
+}
+
+body {
+  margin: 0;
+  font-family: Poppins, sans-serif;
+  background: #eef1f7;
+}
+
+.main { padding: 30px; }
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.header h1 { font-size: 24px; }
+
+.logout-btn{
+  background:#ef4444;
+  color:#fff;
+  border:none;
+  padding:8px 14px;
+  border-radius:8px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.logout-btn:hover{ background:#dc2626; }
+
+.back-btn{
+  background:#6b7280;
+  color:#fff;
+  text-decoration:none;
+  padding:8px 14px;
+  border-radius:8px;
+  font-weight:600;
+}
+
+.card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.1);
+  animation: fadeUp .5s ease;
+}
+
+.card h2 { margin-bottom: 18px; }
+
+.filter-box {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.filter-box select,
+.filter-box button {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-weight: 600;
+}
+
+.filter-box button {
+  background: #10b981;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.filter-box button:hover { background: #059669; }
+
+.table-container { overflow-x: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: #4f46e5;
+  color: #fff;
+}
+
+th, td {
+  padding: 12px 14px;
+  text-align: left;
+}
+
+tbody tr { transition: 0.25s; }
+
+tbody tr:hover {
+  background: #eef2ff;
+  transform: scale(1.01);
+}
+
+.empty {
+  text-align: center;
+  padding: 20px;
+  font-weight: 600;
+  color: #555;
+}
+
+/* ================= PAGINATION ================= */
+.pagination-row {
+  margin-top: 25px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.page-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: #4f46e5;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  transition: .2s;
+}
+
+.page-btn:hover {
+  background: #4338ca;
+  transform: translateY(-2px);
+}
+
+.page-btn.active { background: #10b981; }
+</style>
+</head>
+
+<body>
+
+<div class="main">
+
+  <!-- ✅ HEADER -->
+  <div class="header">
+    <h1>Employee Rewards</h1>
+
+    <form method="POST" action="/logout/" style="margin:0;">
+      {% csrf_token %}
+      <button type="submit" class="logout-btn">Logout</button>
+    </form>
+
+    {% if request.user.role == 1 %}
+      <a href="/admin_dashboard/" class="back-btn">Back to Dashboard</a>
+    {% elif request.user.role == 2 %}
+      <a href="/hr_dashboard/?month={{current_month}}#monthly-summary/" class="back-btn">
+        Back to Dashboard
+      </a>
+    {% endif %}
+  </div>
+
+  <!-- ✅ REWARDS TABLE -->
+  <div class="card">
+    <h2><i class="fas fa-gift"></i> Rewards List</h2>
+
+    <!-- ✅ MONTH FILTER -->
+    <form method="GET" class="filter-box">
+      <label><strong>Select Month:</strong></label>
+
+      <select name="month" required>
+        <option value="1"  {% if selected_month == 1 %}selected{% endif %}>January</option>
+        <option value="2"  {% if selected_month == 2 %}selected{% endif %}>February</option>
+        <option value="3"  {% if selected_month == 3 %}selected{% endif %}>March</option>
+        <option value="4"  {% if selected_month == 4 %}selected{% endif %}>April</option>
+        <option value="5"  {% if selected_month == 5 %}selected{% endif %}>May</option>
+        <option value="6"  {% if selected_month == 6 %}selected{% endif %}>June</option>
+        <option value="7"  {% if selected_month == 7 %}selected{% endif %}>July</option>
+        <option value="8"  {% if selected_month == 8 %}selected{% endif %}>August</option>
+        <option value="9"  {% if selected_month == 9 %}selected{% endif %}>September</option>
+        <option value="10" {% if selected_month == 10 %}selected{% endif %}>October</option>
+        <option value="11" {% if selected_month == 11 %}selected{% endif %}>November</option>
+        <option value="12" {% if selected_month == 12 %}selected{% endif %}>December</option>
+      </select>
+
+      <button type="submit">
+        <i class="fas fa-filter"></i> Submit
+      </button>
+    </form>
+
+    <!-- ✅ TABLE -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Employee Name</th>
+            <th>Email</th>
+            <th>Calculation</th>
+            <th>Reward Amount</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for emp in employees %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ emp.username }}</td>
+            <td>{{ emp.email }}</td>
+
+            <!-- ✅ REAL FORMULA DISPLAY -->
+            <td>
+              ({{ base|default:0 }} × 0.7) +
+              ({{ bonus|default:0 }} × 3)
+            </td>
+
+            <!-- ✅ FINAL CALCULATED REWARD -->
+            <td>
+              $ {{ emp.amount|default:0 }}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="empty">No reward records found</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ✅ PAGINATION -->
+    <div class="pagination-row">
+      {% if employees.has_previous %}
+        <a class="page-btn" href="?page={{ employees.previous_page_number }}">⬅ Prev</a>
+      {% endif %}
+
+      <span class="page-btn active">
+        Page {{ employees.number }} of {{ employees.paginator.num_pages }}
+      </span>
+
+      {% if employees.has_next %}
+        <a class="page-btn" href="?page={{ employees.next_page_number }}">Next ➡</a>
+      {% endif %}
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

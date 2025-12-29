@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+@keyframes slideIn {
+  from {transform: translateX(-80px); opacity: 0;}
+  to {transform: translateX(0); opacity: 1;}
+}
+
+@keyframes fadeUp {
+  from {transform: translateY(20px); opacity: 0;}
+  to {transform: translateY(0); opacity: 1;}
+}
+
+body {
+  margin: 0;
+  font-family: Poppins, sans-serif;
+  background: #eef1f7;
+  display: flex;
+  height: 100vh;
+}
+
+/* ============= SIDEBAR ============= */
+.sidebar {
+  width: 260px;
+  background: #111827;
+  color: #fff;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn .5s ease;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 35px;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  background: #6366f1;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.nav-links a {
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  margin-bottom: 14px;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: 0.25s;
+}
+
+.nav-links a:hover {
+  background: #1f2933;
+  transform: translateX(4px);
+}
+
+.logout {
+  margin-top: auto;
+  background: #ef4444;
+  padding: 10px;
+  text-align: center;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #fff;
+  font-weight: 700;
+}
+
+/* ============= MAIN AREA ============= */
+.main {
+  flex: 1;
+  padding: 25px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.header h1 {
+  font-size: 24px;
+}
+
+.hr-btn {
+  background: #10b981;
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 700;
+  transition: 0.3s;
+}
+
+.hr-btn:hover {
+  background: #059669;
+  transform: scale(1.06);
+}
+
+/* ============= DASHBOARD CARDS ============= */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+  gap: 20px;
+}
+
+.card {
+  background: #fff;
+  padding: 22px;
+  border-radius: 14px;
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(0,0,0,.1);
+  animation: fadeUp .5s ease;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 22px rgba(0,0,0,.15);
+}
+
+.card i {
+  font-size: 32px;
+  margin-bottom: 12px;
+  color: #4f46e5;
+}
+
+.card h3 {
+  margin: 8px 0;
+  font-size: 18px;
+}
+
+.card p {
+  color: #555;
+  font-size: 14px;
+}
+
+.card a {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 8px 14px;
+  background: #4f46e5;
+  color: #fff;
+  border-radius: 7px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.card a:hover {
+  background: #4338ca;
+}
+.logout-btn {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    font-size: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+}
+
+.logout-btn:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(239, 68, 68, 0.45);
+}
+
+.logout-btn:active {
+    transform: scale(0.96);
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.35);
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ============= SIDEBAR ============= -->
+<div class="sidebar">
+  <div class="profile">
+    <div class="avatar">
+      {{ request.user.username|slice:":1" }}
+    </div>
+    <div>
+      <h3>{{ request.user.username }}</h3>
+      <p style="font-size:13px;">{{ request.user.email }}</p>
+      <p style="font-size:12px; color:#9ca3af; font-weight:600;">Admin</p>
+    </div>
+  </div>
+
+
+  
+
+    <form method="POST" action="/logout/" style="display:inline;">
+    {% csrf_token %}
+    <button type="submit" class="logout-btn">Logout</button>
+    </form>
+
+</div>
+
+<!-- ============= MAIN SECTION ============= -->
+<div class="main">
+
+  <div class="header">
+    <h1>Admin Dashboard</h1>
+    <a href="/create_hr/" class="hr-btn">
+      <i class="fas fa-user-plus"></i> Create HR
+    </a>
+  </div>
+
+  <div class="cards">
+
+    <!-- Employee Management -->
+    
+
+   
+    <div class="card">
+      <i class="fas fa-user-tie"></i>
+      <h3>Employee Management</h3>
+      <p>Add, edit, deactivate employees</p>
+      <a href="/hr_management/">Open</a>
+    </div>
+
+    <!-- Activity Logs -->
+    <div class="card">
+      <i class="fas fa-clipboard-list"></i>
+      <h3>Activity Logs</h3>
+      <p>View system and user activities</p>
+      <a href="/activity_logs/">Open</a>
+    </div>
+    <!-- Rewards Management -->
+<div class="card">
+  <i class="fas fa-gift"></i>
+  <h3>Rewards Management</h3>
+  <p>View and manage employee rewards</p>
+  <a href="/admin_rewards/">Open</a>
+</div>
+
+<!-- Voting System -->
+<div class="card">
+  <i class="fas fa-vote-yea"></i>
+  <h3>Voting System</h3>
+  <p>View employee & peer voting</p>
+  <a href="/admin_voting/">Open</a>
+</div>
+
+<!-- Performance Tracking -->
+<div class="card">
+  <i class="fas fa-chart-line"></i>
+  <h3>Performance</h3>
+  <p>Monitor performance scores</p>
+  <a href="/admin_performance/">Open</a>
+</div>
+
+
+<div class="card">
+      <i class="as fa-gift"></i>
+      <h3>Reward Management</h3>
+      <p>change rewards scheme</p>
+      <a href="/reward_management/">Open</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

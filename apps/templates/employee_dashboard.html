@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Employee Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+body{
+  margin:0;
+  font-family:Poppins,sans-serif;
+  background:#eef1f6;
+  display:flex;
+  height:100vh;
+  color:#333;
+}
+
+.sidebar{
+  width:260px;
+  background:#111827;
+  color:#fff;
+  padding:22px;
+  display:flex;
+  flex-direction:column;
+}
+
+.profile-box{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:30px;
+}
+
+.avatar{
+  width:52px;
+  height:52px;
+  background:#6366f1;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  font-size:18px;
+}
+
+.sidebar-links{margin-top:auto;}
+
+.btn{
+  padding:10px;
+  border-radius:8px;
+  background:#4f46e5;
+  color:#fff;
+  text-decoration:none;
+  text-align:center;
+  font-weight:600;
+}
+
+.main{
+  flex:1;
+  padding:25px;
+  overflow-y:auto;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+  margin-bottom:30px;
+}
+
+.stat-card{
+  background:#fff;
+  padding:20px;
+  border-radius:14px;
+  box-shadow:0 6px 16px rgba(0,0,0,.1);
+  text-align:center;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:20px;
+}
+
+.card{
+  background:#fff;
+  padding:18px;
+  border-radius:14px;
+  box-shadow:0 6px 12px rgba(0,0,0,.1);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  border:2px solid transparent;
+}
+
+.card.voted{
+  border-color:#10b981;
+  background:#ecfdf5;
+}
+
+.vote-box{
+  margin-top:10px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-weight:600;
+}
+
+.vote-status{
+  margin-top:6px;
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.vote-status.voted{background:#10b981;color:#fff;}
+.vote-status.not-voted{background:#e5e7eb;color:#333;}
+
+.alert{
+  background:#fee2e2;
+  padding:10px;
+  border-radius:8px;
+  margin-bottom:15px;
+  font-weight:600;
+  color:#991b1b;
+  display:none;
+}
+
+.vote-counter{
+  margin-bottom:15px;
+  font-size:14px;
+  color:#555;
+  font-weight:600;
+}
+
+.vote-submit{
+  margin-top:25px;
+  background:#10b981;
+  border:none;
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  font-size:16px;
+  font-weight:700;
+  color:#fff;
+  cursor:pointer;
+}
+.logout-btn {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    font-size: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+}
+
+.logout-btn:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(239, 68, 68, 0.45);
+}
+
+.logout-btn:active {
+    transform: scale(0.96);
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.35);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+  <div class="profile-box">
+    <div class="avatar">{{ request.user.first_name|slice:":1" }}</div>
+    <div>
+      <h3>{{ request.user.first_name }}</h3>
+      <p style="font-size:13px;">{{ request.user.email }}</p>
+    </div>
+  </div>
+
+  <form method="POST" action="/logout/" style="display:inline;">
+    {% csrf_token %}
+    <button type="submit" class="logout-btn">Logout</button>
+  </form>
+
+</div>
+
+<div class="main">
+
+  <div class="stats">
+    <div class="stat-card">
+      <h2>{{ votes_received }}</h2>
+      <p>Total Votes Received</p>
+    </div>
+    <div class="stat-card">
+      <h2>${{ reward_amount.amount }}</h2>
+      <p>Reward You Will Get</p>
+    </div>
+  </div>
+
+  <div id="voteAlert" class="alert">You can only vote for 3 employees!</div>
+  <div class="month-control">
+        <span class="month-select current-month-label">
+          {% if selected_month == 1 %}
+            January
+          {% elif selected_month == 2 %}
+            February
+          {% elif selected_month == 3 %}
+            March
+          {% elif selected_month == 4 %}
+            April
+          {% elif selected_month == 5 %}
+            May
+          {% elif selected_month == 6 %}
+            June
+          {% elif selected_month == 7 %}
+            July
+          {% elif selected_month == 8 %}
+            August
+          {% elif selected_month == 9 %}
+            September
+          {% elif selected_month == 10 %}
+            October
+          {% elif selected_month == 11 %}
+            November
+          {% elif selected_month == 12 %}
+            December
+          {% else %}
+            -
+          {% endif %}
+        </span>
+      </div>
+  <form method="POST">
+    {% csrf_token %}
+
+  <h3>Vote for Employees (Max 3)</h3>
+  <p class="vote-counter" id="voteCounter">Votes selected: 0 / 3</p>
+
+  <div class="grid">
+    {% for emp in employees %}
+      <div class="card {% if emp.id in voted_ids %}voted{% endif %}">
+
+        <strong>{{ emp.first_name }}</strong>
+        <small>{{ emp.email }}</small>
+
+        <!-- MAIN VOTE -->
+        <div class="vote-box">
+          <input type="checkbox"
+                 class="vote-checkbox"
+                 name="vote_ids"
+                 value="{{ emp.id }}"
+                 {% if emp.id in voted_ids %}checked disabled{% endif %}>
+          Vote
+        </div>
+
+       {% if emp.id in voted_ids %}
+        <div class="vote-status voted">Voted</div>
+
+        <label style="font-size:13px;font-weight:600;">
+            <input type="checkbox"
+                class="undo-checkbox"
+                name="undo_votes"
+                value="{{ emp.id }}">
+            Undo Vote
+        </label>
+
+        {% else %}
+        <div class="vote-status not-voted">Not Voted</div>
+        {% endif %}
+
+
+      </div>
+    {% endfor %}
+  </div>
+
+  <button class="vote-submit" type="submit">Submit Votes</button>
+</form>
+
+</div>
+
+<script>
+const voteBoxes = document.querySelectorAll(".vote-checkbox:not(:disabled)");
+const undoBoxes = document.querySelectorAll(".undo-checkbox");
+const alertBox = document.getElementById("voteAlert");
+const voteCounter = document.getElementById("voteCounter");
+
+function updateCounter(){
+  const checked = document.querySelectorAll(".vote-checkbox:checked").length;
+  voteCounter.textContent = `Votes selected: ${checked} / 3`;
+}
+
+voteBoxes.forEach(cb => {
+  cb.addEventListener("change", function(){
+    let checked = document.querySelectorAll(".vote-checkbox:checked").length;
+
+    if (checked > 3) {
+      this.checked = false;
+      alertBox.style.display = "block";
+      setTimeout(() => alertBox.style.display = "none", 2000);
+    }
+
+    updateCounter();
+  });
+});
+
+undoBoxes.forEach(cb => {
+  cb.addEventListener("change", function(){
+    if(this.checked){
+      const card = this.closest(".card");
+      card.style.opacity = "0.6";
+    }
+  });
+});
+
+updateCounter();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1037 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HR Dashboard - Employee Performance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ================== ANIMATIONS ================== */
+@keyframes fadeIn {
+  from {opacity:0; transform:translateY(6px)}
+  to {opacity:1; transform:none}
+}
+
+@keyframes glow {
+  0%{box-shadow:0 0 0}
+  50%{box-shadow:0 0 14px rgba(16,185,129,.4)}
+  100%{box-shadow:0 0 0}
+}
+
+@keyframes pop {
+  from{transform:scale(.95)}
+  to{transform:scale(1)}
+}
+
+@keyframes slideIn {
+  from { transform:translateX(-20px); opacity:0 }
+  to { transform:translateX(0); opacity:1 }
+}
+
+@keyframes pulse {
+  0% { box-shadow:0 0 0 0 rgba(16,185,129,.7) }
+  70% { box-shadow:0 0 0 14px rgba(16,185,129,0) }
+  100% { box-shadow:0 0 0 0 rgba(16,185,129,0) }
+}
+
+/* subtle floating for avatar */
+@keyframes float {
+  0%   { transform:translateY(0); }
+  50%  { transform:translateY(-4px); }
+  100% { transform:translateY(0); }
+}
+
+/* animated gradient background */
+@keyframes bgMove {
+  0%   { background-position:0% 50%; }
+  50%  { background-position:100% 50%; }
+  100% { background-position:0% 50%; }
+}
+
+/* ================== BASE ================== */
+html { scroll-behavior:smooth; }
+
+body{
+  margin:0;
+  font-family:Poppins,sans-serif;
+  background:linear-gradient(135deg,#eef2ff,#e0f2fe,#fef9c3);
+  background-size:400% 400%;
+  animation:bgMove 25s ease infinite;
+  display:flex;
+  height:100vh;
+  color:#111827;
+}
+
+/* ================== SIDEBAR ================== */
+.sidebar{
+  width:260px;
+  background:#020617;
+  color:#fff;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  animation:fadeIn .4s;
+  box-shadow:4px 0 18px rgba(15,23,42,0.7);
+  z-index:10;
+  position:relative;
+}
+
+.sidebar::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at top,#22c55e22,transparent 55%);
+  pointer-events:none;
+}
+
+.hr-box{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:20px;
+}
+
+.avatar{
+  width:50px;
+  height:50px;
+  background:linear-gradient(135deg,#6366f1,#22c55e);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:14px;
+  font-weight:700;
+  box-shadow:0 8px 18px rgba(79,70,229,.5);
+  animation:float 4s ease-in-out infinite;
+}
+
+.sidebar-links{
+  margin-top:auto;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.btn{
+  padding:10px 12px;
+  border-radius:999px;
+  border:none;
+  background:#4f46e5;
+  color:#fff;
+  text-decoration:none;
+  text-align:center;
+  font-weight:600;
+  transition:.2s;
+  cursor:pointer;
+  display:inline-block;
+  font-size:14px;
+  position:relative;
+  overflow:hidden;
+}
+
+/* ripple effect */
+.btn::after,
+.save-btn::after{
+  content:"";
+  position:absolute;
+  width:0;
+  height:0;
+  border-radius:50%;
+  background:rgba(255,255,255,.35);
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  opacity:0;
+  transition:width .35s ease,height .35s ease,opacity .4s ease;
+}
+.btn:active::after,
+.save-btn:active::after{
+  width:220px;
+  height:220px;
+  opacity:0;
+}
+
+.btn:hover{
+  transform:translateY(-2px);
+  filter:brightness(1.1);
+}
+
+.btn:focus{
+  outline:3px solid #6366f1;
+  outline-offset:2px;
+}
+
+/* Sidebar buttons animation */
+.sidebar-links .btn {
+  animation:slideIn .4s ease;
+}
+
+.sidebar-links .btn:hover {
+  transform:translateX(6px) scale(1.03);
+  background:linear-gradient(135deg,#4f46e5,#6366f1);
+}
+
+/* Active page highlight */
+.sidebar-links .btn.active {
+  background:linear-gradient(135deg,#10b981,#059669);
+  animation:pulse 2.4s infinite;
+}
+
+/* Logout */
+.logout-btn {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    font-size: 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+    width: 100%;
+    text-align:center;
+}
+
+.logout-btn:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.45);
+}
+
+.logout-btn:active {
+    transform: scale(0.96);
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.35);
+}
+
+/* ================== MAIN ================== */
+.main{
+  flex:1;
+  padding:25px;
+  overflow-y:auto;
+  animation:fadeIn .5s;
+}
+
+.topbar{
+  margin-bottom:20px;
+}
+
+.topbar input{
+  width:100%;
+  padding:12px;
+  border-radius:999px;
+  border:1px solid #cbd5f5;
+  transition:.2s;
+  font-size:15px;
+  background:#f9fafb;
+}
+
+.topbar input:focus{
+  outline:none;
+  border-color:#4f46e5;
+  box-shadow:0 0 0 3px #c7d2fe;
+}
+
+/* ================== GRID / CARDS ================== */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:20px;
+}
+
+.card{
+  background:#ffffffcc;
+  backdrop-filter:blur(6px);
+  padding:18px;
+  border-radius:18px;
+  box-shadow:0 10px 30px rgba(15,23,42,.18);
+  animation:fadeIn .4s;
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  transition:.25s;
+}
+
+/* gradient top border strip */
+.card::before,
+.summary-box::before{
+  content:"";
+  position:absolute;
+  left:18px;
+  right:18px;
+  top:0;
+  height:3px;
+  border-radius:999px;
+  background:linear-gradient(90deg,#4f46e5,#22c55e,#facc15);
+  opacity:.7;
+}
+
+.card:hover{
+  transform:translateY(-8px) scale(1.02);
+  box-shadow:0 18px 34px rgba(15,23,42,.28);
+}
+
+.card.voted{
+  border:2px solid #10b981;
+  background:#ecfdf5;
+  animation:glow 1.5s infinite;
+}
+
+.card.voted-pending{
+  border:2px dashed #0ea5e9;
+  background:#f0f9ff;
+  box-shadow:0 0 10px #0ea5e9;
+}
+
+.card.undo-pending{
+  border:2px dashed #ef4444;
+  background:#fef2f2;
+  box-shadow:0 0 10px #ef4444;
+}
+
+.card-header{
+  font-size:16px;
+  font-weight:700;
+}
+
+.small{
+  font-size:13px;
+  color:#6b7280;
+}
+
+.controls{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.controls input{
+  padding:10px;
+  border-radius:10px;
+  border:1px solid #e5e7eb;
+  transition:.2s;
+  width: 100%;
+  font-size:14px;
+  background:#f9fafb;
+}
+
+.controls input:focus{
+  border-color:#10b981;
+  box-shadow:0 0 0 3px #bbf7d0;
+}
+
+.vote-status{
+  padding:8px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+  width:fit-content;
+  animation:pop .2s;
+}
+
+.vote-status.voted{
+  background:#dcfce7;
+  color:#166534;
+}
+
+.vote-status.not-voted{
+  background:#e5e7eb;
+  color:#374151;
+}
+
+.save-btn{
+  background:linear-gradient(135deg,#10b981,#059669);
+  color:#fff;
+  border:none;
+  padding:10px;
+  border-radius:999px;
+  font-weight:600;
+  cursor:pointer;
+  transition:.2s;
+  font-size:14px;
+  position:relative;
+  overflow:hidden;
+}
+
+.save-btn:hover{
+  transform:scale(1.05);
+  filter:brightness(1.07);
+}
+
+.save-btn:focus{
+  outline:3px solid #10b981;
+  outline-offset:2px;
+}
+
+/* ================== SCORE BADGE ================== */
+.score-badge{
+  padding:5px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:600;
+}
+.score-done{
+  background:#bbf7d0;
+  color:#166534;
+  animation:glow 2s infinite;
+}
+.score-pending{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+/* ================== ROW COLOR BASED ON SCORE ================== */
+.row-scored {
+  background:#f0fdf4;   /* light green */
+  transition:background .25s, transform .15s;
+}
+
+.row-not-scored {
+  background:#fff1f2;   /* light red */
+  transition:background .25s, transform .15s;
+}
+
+.summary-table tbody tr:hover{
+  transform:scale(1.01);
+  box-shadow:0 4px 10px rgba(15,23,42,.08);
+}
+
+/* ================== PAGINATION ================== */
+.pagination-row{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin:30px 0;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+/* ================== MESSAGES ================== */
+.message-box{
+  margin-bottom:18px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.alert{
+  padding:12px 16px;
+  border-radius:10px;
+  font-weight:600;
+  font-size:14px;
+}
+
+.alert.success{
+  background:#dcfce7;
+  color:#166534;
+  border-left:5px solid #22c55e;
+}
+
+.alert.error{
+  background:#fee2e2;
+  color:#991b1b;
+  border-left:5px solid #ef4444;
+}
+
+.alert.warning{
+  background:#fef3c7;
+  color:#92400e;
+  border-left:5px solid #f59e0b;
+}
+
+.alert.info{
+  background:#e0f2fe;
+  color:#075985;
+  border-left:5px solid #0ea5e9;
+}
+
+/* ================== SUMMARY ================== */
+.summary-box{
+  margin-top:35px;
+  background:#ffffffdd;
+  backdrop-filter:blur(8px);
+  padding:22px;
+  border-radius:20px;
+  box-shadow:0 12px 32px rgba(15,23,42,.18);
+  animation:fadeIn .4s;
+  position:relative;
+}
+
+.summary-box::before{
+  top:10px;
+}
+
+.month-filter{
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-bottom:20px;
+}
+
+.month-control{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+
+.current-month-label{
+  padding:6px 14px;
+  border-radius:999px;
+  background:#eef2ff;
+  color:#4f46e5;
+  font-weight:600;
+  font-size:14px;
+  box-shadow:0 0 0 1px #c7d2fe;
+}
+
+.summary-table{
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+  border-radius:14px;
+  overflow:hidden;
+}
+
+.summary-table th,
+.summary-table td{
+  padding:12px 10px;
+  text-align:left;
+  vertical-align:middle;
+  border-bottom:1px solid #e5e7eb;
+}
+
+.summary-table th{
+  background:linear-gradient(135deg,#4f46e5,#6366f1);
+  color:#fff;
+  font-size:13px;
+}
+
+.summary-table td input{
+  width:100%;
+  max-width:100px;
+  padding:6px;
+  border-radius:10px;
+  border:1px solid #d1d5db;
+  background:#f9fafb;
+  font-size:13px;
+}
+
+.summary-table td input:focus{
+  border-color:#4f46e5;
+  box-shadow:0 0 0 2px #c7d2fe;
+}
+
+.badge-vote{
+  background:#10b981;
+  color:#fff;
+  padding:5px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:600;
+}
+
+/* ================== RESPONSIVE ================== */
+@media (max-width: 768px) {
+  body{
+    flex-direction:column;
+    height:auto;
+  }
+
+  .sidebar{
+    width:100%;
+    box-shadow:0 4px 18px rgba(15,23,42,.4);
+  }
+
+  .sidebar-links{
+    flex-direction:row;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:8px;
+  }
+
+  .btn{
+    min-width:120px;
+  }
+
+  .main{
+    padding:15px;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .summary-table{
+    display:block;
+    overflow-x:auto;
+    white-space:nowrap;
+  }
+}
+/* ================== FILTER BOX UPGRADE ================== */
+.filter-box{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:flex-end;
+  gap:12px;
+  margin-bottom:18px;
+  background:#f1f5ff;
+  padding:14px 16px;
+  border-radius:14px;
+  box-shadow:0 6px 16px rgba(79,70,229,.12);
+}
+
+.filter-box label{
+  font-size:14px;
+  font-weight:600;
+  color:#1f2937;
+}
+
+.month-select{
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid #c7d2fe;
+  font-size:14px;
+  font-weight:600;
+  background:#ffffff;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.month-select:focus{
+  outline:none;
+  border-color:#4f46e5;
+  box-shadow:0 0 0 3px #c7d2fe;
+}
+
+/* ================== SUMMARY TABLE ENHANCEMENTS ================== */
+.summary-table thead th{
+  position:sticky;
+  top:0;
+  z-index:2;
+  letter-spacing:.4px;
+}
+
+.summary-table tbody tr{
+  transition:transform .18s ease, box-shadow .18s ease, background .25s;
+}
+
+.summary-table tbody tr:hover{
+  transform:translateY(-2px);
+  box-shadow:0 4px 14px rgba(15,23,42,.12);
+  background:#eef2ff;
+}
+
+/* ================== SCORE INPUT STYLE ================== */
+.summary-score-input{
+  text-align:center;
+  font-weight:700;
+  color:#1f2937;
+  background:linear-gradient(135deg,#f9fafb,#eef2ff);
+  border:1px dashed #a5b4fc;
+  transition:.25s;
+}
+
+.summary-score-input:focus{
+  background:#fff;
+  border-style:solid;
+  border-color:#4f46e5;
+}
+
+/* ================== STATUS BADGES ================== */
+.badge.high{
+  background:linear-gradient(90deg,#16a34a,#22c55e);
+  color:#fff;
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+  box-shadow:0 4px 10px rgba(34,197,94,.4);
+}
+
+.badge.mid{
+  background:linear-gradient(90deg,#facc15,#fde047);
+  color:#78350f;
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+  box-shadow:0 4px 10px rgba(250,204,21,.4);
+}
+
+.badge.low{
+  background:linear-gradient(90deg,#ef4444,#f87171);
+  color:#fff;
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+  box-shadow:0 4px 10px rgba(239,68,68,.4);
+}
+
+/* ================== UPDATE BUTTON ANIMATION ================== */
+.summary-update-btn{
+  background:linear-gradient(135deg,#4f46e5,#6366f1);
+  border-radius:999px !important;
+  box-shadow:0 6px 14px rgba(79,70,229,.35);
+  transition:.25s;
+}
+
+.summary-update-btn:hover{
+  transform:translateY(-2px) scale(1.02);
+  box-shadow:0 10px 22px rgba(79,70,229,.45);
+}
+
+/* ================== SUBMIT ALL BUTTON PULSE ================== */
+button[name="save_all"]{
+  animation:pulse 2.2s infinite;
+}
+
+/* ================== PAGINATION UPGRADE ================== */
+.pagination-row .page-btn{
+  border-radius:999px;
+  box-shadow:0 6px 14px rgba(79,70,229,.25);
+}
+
+.pagination-row .page-btn.active{
+  box-shadow:0 8px 18px rgba(16,185,129,.45);
+}
+
+/* ================== EMPTY STATE ================== */
+.empty{
+  font-size:15px;
+  color:#6b7280;
+  background:#f9fafb;
+  border-radius:12px;
+  padding:14px;
+  text-align:center;
+  letter-spacing:.4px;
+}
+
+/* ================== MOBILE TWEAKS FOR BOX 2 ================== */
+@media (max-width:600px){
+  .filter-box{
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  .summary-table th,
+  .summary-table td{
+    font-size:12px;
+    padding:10px 8px;
+  }
+
+  .summary-score-input{
+    max-width:80px;
+  }
+}
+button[type="submit"]{
+  background:linear-gradient(135deg,#0ea5e9,#0284c7);
+  color:#fff;
+  border:none;
+  padding:10px 18px;
+  border-radius:999px;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  transition:all .25s ease;
+  box-shadow:0 6px 16px rgba(14,165,233,.45);
+  position:relative;
+  overflow:hidden;
+}
+
+button[type="submit"]:hover{
+  transform:translateY(-2px) scale(1.03);
+  box-shadow:0 10px 22px rgba(14,165,233,.6);
+  filter:brightness(1.1);
+}
+
+button[type="submit"]:active{
+  transform:scale(0.96);
+  box-shadow:0 4px 10px rgba(14,165,233,.4);
+}
+
+/* Glow pulse for SUBMIT ALL */
+button[name="save_all_summary"],
+button[name="save_all"]{
+  animation:pulse 2.2s infinite;
+  background:linear-gradient(135deg,#16a34a,#22c55e);
+  box-shadow:0 6px 18px rgba(34,197,94,.5);
+}
+
+button[name="save_all_summary"]:hover,
+button[name="save_all"]:hover{
+  box-shadow:0 12px 26px rgba(34,197,94,.7);
+}
+
+/* Small Update Buttons */
+.summary-update-btn{
+  background:linear-gradient(135deg,#6366f1,#4f46e5) !important;
+  box-shadow:0 4px 12px rgba(79,70,229,.5);
+}
+
+.summary-update-btn:hover{
+  box-shadow:0 8px 20px rgba(79,70,229,.7);
+}
+
+/* Filter Submit */
+.filter-box button[type="submit"]{
+  background:linear-gradient(135deg,#f59e0b,#f97316);
+  box-shadow:0 6px 14px rgba(249,115,22,.5);
+}
+
+.filter-box button[type="submit"]:hover{
+  box-shadow:0 12px 26px rgba(249,115,22,.7);
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ================== SIDEBAR ================== -->
+<div class="sidebar">
+  <div class="hr-box">
+    <div class="avatar">HR</div>
+    <div>
+      <h3>{{ hr_details.username }}</h3>
+      <p style="font-size:13px;opacity:.8">{{ hr_details.email }}</p>
+    </div>
+  </div>
+
+  <div class="sidebar-links">
+    <a href="/add_employee/" class="btn">➕ Add Employee</a>
+    <a href="/employee_list/" class="btn">👨‍💼 Employee List</a>
+    <a href="/performance/" class="btn active">📊 Performance</a>
+    <a href="/admin_voting/" class="btn">🗳 Voting</a>
+    <a href="/admin_rewards/" class="btn">🏆 Rewards</a>
+
+    <form method="POST" action="/logout/" style="margin-top:10px;">
+      {% csrf_token %}
+      <button type="submit" class="logout-btn">🚪 Logout</button>
+    </form>
+  </div>
+</div>
+
+<!-- ================== MAIN ================== -->
+<div class="main">
+
+  <div class="topbar">
+    <input type="text" id="liveSearch" placeholder="Search employees by name or email..." aria-label="Search employees">
+  </div>
+
+  {% if messages %}
+  <div class="message-box">
+    {% for message in messages %}
+    <div class="alert {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- ================== BOX 1: CURRENT MONTH VOTE ================== -->
+  <div class="card" style="margin-bottom:25px;">
+     <form method="GET" class="filter-box">
+    <label><strong>Select Month:</strong></label>
+
+    <select name="month" class="month-select" required>
+      <option value="1"  {% if selected_month == 1 %}selected{% endif %}>January</option>
+      <option value="2"  {% if selected_month == 2 %}selected{% endif %}>February</option>
+      <option value="3"  {% if selected_month == 3 %}selected{% endif %}>March</option>
+      <option value="4"  {% if selected_month == 4 %}selected{% endif %}>April</option>
+      <option value="5"  {% if selected_month == 5 %}selected{% endif %}>May</option>
+      <option value="6"  {% if selected_month == 6 %}selected{% endif %}>June</option>
+      <option value="7"  {% if selected_month == 7 %}selected{% endif %}>July</option>
+      <option value="8"  {% if selected_month == 8 %}selected{% endif %}>August</option>
+      <option value="9"  {% if selected_month == 9 %}selected{% endif %}>September</option>
+      <option value="10" {% if selected_month == 10 %}selected{% endif %}>October</option>
+      <option value="11" {% if selected_month == 11 %}selected{% endif %}>November</option>
+      <option value="12" {% if selected_month == 12 %}selected{% endif %}>December</option>
+    </select>
+
+    <button type="submit">
+      <i class="fas fa-filter"></i> Submit
+    </button>
+  </form>
+    
+
+    <form method="POST">
+      {% csrf_token %}
+
+      <div class="grid" id="employeeGrid">
+        {% for emp in page_obj %}
+          <div class="card employee-card {% if emp.id in voted_ids %}voted{% endif %}" data-employee-id="{{ emp.id }}">
+
+            <div class="card-header">{{ emp.first_name }}</div>
+            <div class="small">{{ emp.email }}</div>
+
+            <div class="controls">
+              {% if emp.id in voted_ids %}
+                <div class="vote-status voted">Voted</div>
+                <label>
+                  <input type="checkbox"
+                         name="vote_undo{{ emp.id }}"
+                         value="{{ emp.id }}"
+                         class="undo-vote-checkbox">
+                  Undo Vote
+                </label>
+              {% else %}
+                <div class="vote-status not-voted">Not Voted</div>
+                <label>
+                  <input type="checkbox"
+                         name="vote_id_{{ emp.id }}"
+                         value="{{ emp.id }}"
+                         class="new-vote-checkbox">
+                  Give Vote
+                </label>
+              {% endif %}
+
+              <button class="save-btn"
+                      type="submit"
+                      name="save_single"
+                      value="{{ emp.id }}">
+                Save
+              </button>
+
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="pagination-row">
+        {% if page_obj.has_previous %}
+          <a class="btn" href="?page={{ page_obj.previous_page_number }}&month={{ selected_month }}" aria-label="Go to previous page">⬅ Previous</a>
+        {% endif %}
+
+        <span class="btn" style="background:#111827;">
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+          <a class="btn" href="?page={{ page_obj.next_page_number }}&month={{ selected_month }}" aria-label="Go to next page">Next ➡</a>
+        {% endif %}
+      </div>
+
+    </form>
+  </div>
+
+ 
+
+</div>
+
+<script>
+// --- CONFIG ---
+const maxVotes = 3;
+
+// --- ELEMENTS ---
+const newVoteCheckboxes = document.querySelectorAll(".new-vote-checkbox");
+const undoCheckboxes = document.querySelectorAll(".undo-vote-checkbox");
+const alertBox = document.getElementById("voteAlert");
+const counter = document.getElementById("voteCounter");
+const employeeGrid = document.getElementById("employeeGrid");
+
+// --- INITIAL COUNT ---
+let alreadyVotedCount = 0;
+if (employeeGrid){
+  alreadyVotedCount = employeeGrid.querySelectorAll('.card.voted').length;
+}
+
+let undoing = 0;
+let newSelected = 0;
+let total = alreadyVotedCount;
+
+if (counter){
+  counter.innerText = `Votes selected: ${total} / ${maxVotes}`;
+}
+
+// --- MAIN FUNCTION ---
+function updateCounterAndVisuals(checkbox) {
+  if (!employeeGrid) return;
+
+  const isNewVote = checkbox.classList.contains('new-vote-checkbox');
+  const isUndo = checkbox.classList.contains('undo-vote-checkbox');
+  const card = checkbox.closest('.employee-card');
+  const voteStatusElement = card.querySelector('.vote-status');
+
+  // Recalculate
+  undoing = document.querySelectorAll(".undo-vote-checkbox:checked").length;
+  newSelected = document.querySelectorAll(".new-vote-checkbox:checked").length;
+  total = alreadyVotedCount - undoing + newSelected;
+
+  // --- ENFORCE MAX LIMIT ---
+  if (total > maxVotes && isNewVote && checkbox.checked) {
+    checkbox.checked = false;
+    if (alertBox){
+      alertBox.style.display = "block";
+      setTimeout(() => {
+        alertBox.style.display = "none";
+      }, 3000);
+    }
+
+    // Recalculate after force uncheck
+    undoing = document.querySelectorAll(".undo-vote-checkbox:checked").length;
+    newSelected = document.querySelectorAll(".new-vote-checkbox:checked").length;
+    total = alreadyVotedCount - undoing + newSelected;
+  }
+
+  // --- RESET VISUAL STATES ---
+  card.classList.remove('voted-pending', 'undo-pending', 'voted');
+
+  // --- APPLY VISUAL STATES ---
+  if (isNewVote && checkbox.checked) {
+    card.classList.add('voted-pending');
+    voteStatusElement.textContent = "Vote Pending";
+    voteStatusElement.className = "vote-status voted";
+  }
+
+  if (isUndo && checkbox.checked) {
+    card.classList.add('undo-pending');
+    voteStatusElement.textContent = "Undo Pending";
+    voteStatusElement.className = "vote-status not-voted";
+  }
+
+  if (isUndo && !checkbox.checked) {
+    card.classList.add('voted');
+    voteStatusElement.textContent = "Voted";
+    voteStatusElement.className = "vote-status voted";
+  }
+
+  // --- UPDATE COUNTER ---
+  if (counter){
+    counter.innerText = `Votes selected: ${total} / ${maxVotes}`;
+  }
+}
+
+// --- EVENT LISTENERS ---
+newVoteCheckboxes.forEach(cb => {
+  cb.addEventListener("change", function () {
+    updateCounterAndVisuals(this);
+  });
+});
+
+undoCheckboxes.forEach(cb => {
+  cb.addEventListener("change", function () {
+    updateCounterAndVisuals(this);
+  });
+});
+
+// --- LIVE SEARCH ---
+document.getElementById("liveSearch").addEventListener("keyup", function () {
+  const value = this.value.toLowerCase();
+  document.querySelectorAll(".employee-card").forEach(card => {
+    const text = card.innerText.toLowerCase();
+    card.style.display = text.includes(value) ? "flex" : "none";
+  });
+});
+
+// --- SCORE VALIDATION (0–100) ---
+document.querySelectorAll("input[type='number']").forEach(input => {
+  input.addEventListener("input", function () {
+    if (this.value < 0) this.value = 0;
+    if (this.value > 100) this.value = 100;
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Edit Employee</title>
+
+<style>
+  body{
+    margin:0;
+    font-family:Poppins, sans-serif;
+    background:#f3f4f7;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    color:#333;
+  }
+
+  .container{
+    width:420px;
+    background:#ffffff;
+    padding:25px 30px;
+    border-radius:12px;
+    box-shadow:0 4px 20px rgba(0,0,0,.1);
+  }
+
+  h2{
+    margin:0 0 20px;
+    text-align:center;
+    font-size:24px;
+    font-weight:600;
+  }
+
+  .back-btn{
+    display:inline-block;
+    margin-bottom:15px;
+    text-decoration:none;
+    color:#4f46e5;
+    font-weight:500;
+  }
+
+  label{
+    font-size:14px;
+    font-weight:500;
+    margin-bottom:6px;
+    display:block;
+  }
+
+  input{
+    width:100%;
+    padding:10px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    margin-bottom:15px;
+    font-size:15px;
+  }
+
+  .btn{
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:8px;
+    background:#4f46e5;
+    color:#fff;
+    font-weight:600;
+    cursor:pointer;
+    font-size:16px;
+  }
+
+  .btn:hover{
+    background:#4338ca;
+  }
+
+  .alert{
+    padding:10px;
+    border-radius:8px;
+    margin-bottom:12px;
+    font-size:14px;
+  }
+  .alert-error{background:#fee2e2;color:#b91c1c}
+  .alert-success{background:#dcfce7;color:#166534}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <a href="/employee_list/" class="back-btn">← Back to Employee List</a>
+
+  <h2>Edit Employee</h2>
+  <form method="POST" action="/logout/" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">Logout</button>
+    </form>
+
+  <!-- Django Messages -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert 
+        {% if message.tags == 'error' %}alert-error
+        {% else %}alert-success
+        {% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <form method="POST">
+    {% csrf_token %}
+
+    <label>First Name</label>
+    <input type="text" name="first_name" value="{{ employee.first_name }}" required />
+
+    <label>Username</label>
+    <input type="text" name="username" value="{{ employee.username }}" required />
+
+    <label>Email</label>
+    <input type="email" name="email" value="{{ employee.email }}" required />
+
+    <label>Password </label>
+    <input type="password" name="password" placeholder="Leave blank to keep current password" />
+
+    <button class="btn" type="submit">Update</button>
+  </form>
+
+</div>
+
+</body>
+</html>

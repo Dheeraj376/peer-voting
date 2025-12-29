@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+  <title>Activity Logs</title>
+  <style>
+    body {font-family:Poppins;background:#eef1f7;padding:30px;}
+    table {width:100%;background:#fff;border-radius:12px;overflow:hidden;}
+    th,td {padding:12px;text-align:left;border-bottom:1px solid #eee;}
+    th {background:#111827;color:#fff;}
+    tr:hover {background:#f3f4f6;}
+
+    .pagination {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .pagination a {
+      padding: 8px 14px;
+      margin: 0 4px;
+      background: #4f46e5;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    .pagination span {
+      padding: 8px 14px;
+      background: #111827;
+      color: #fff;
+      border-radius: 6px;
+      margin: 0 4px;
+    }
+
+    .back-btn {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 8px 16px;
+  background: #111827;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+.back-btn:hover {
+  background: #4f46e5;
+  transform: translateY(-1px);
+}
+
+  </style>
+</head>
+<body>
+
+<h2>System Activity Logs</h2>
+
+<a href="/admin_dashboard/" class="back-btn">← Back to Dashboard</a>
+
+<table>
+  <tr>
+    <th>User</th>
+    <th>Action</th>
+    <th>Path</th>
+    <th>Method</th>
+    <th>IP</th>
+    <th>Date</th>
+  </tr>
+
+  {% for log in logs %}
+  <tr>
+    <td>{{ log.user }}</td>
+    <td>{{ log.action }}</td>
+    <td>{{ log.path }}</td>
+    <td>{{ log.method }}</td>
+    <td>{{ log.ip_address }}</td>
+    <td>{{ log.created_at|date:"d M Y h:i A" }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<div class="pagination">
+  {% if logs.has_previous %}
+    <a href="?page={{ logs.previous_page_number }}">Previous</a>
+  {% endif %}
+
+  <span>Page {{ logs.number }} of {{ logs.paginator.num_pages }}</span>
+
+  {% if logs.has_next %}
+    <a href="?page={{ logs.next_page_number }}">Next</a>
+  {% endif %}
+</div>
+
+</body>
+</html>

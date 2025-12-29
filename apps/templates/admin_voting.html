@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin Voting</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+body {
+  margin: 0;
+  font-family: Poppins, sans-serif;
+  background: #eef1f7;
+}
+
+.main {
+  padding: 30px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.header h1 {
+  font-size: 24px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.1);
+}
+
+.filter-box {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+select, button {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-weight: 600;
+}
+
+button {
+  background: #10b981;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #059669;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: #4f46e5;
+  color: #fff;
+}
+
+th, td {
+  padding: 12px 14px;
+  text-align: left;
+}
+
+tbody tr:hover {
+  background: #eef2ff;
+}
+
+.empty {
+  text-align: center;
+  padding: 20px;
+  font-weight: 600;
+}
+
+/* ================= PAGINATION ================= */
+.pagination-row {
+  margin-top: 25px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.page-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: #4f46e5;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: .25s;
+}
+
+.page-btn:hover {
+  background: #4338ca;
+  transform: translateY(-2px);
+}
+
+.page-btn.active {
+  background: #10b981;
+}
+/* ================= PAGE ANIMATION ================= */
+.main {
+  animation: fadeInUp 0.6s ease-in-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================= HEADER POLISH ================= */
+.header h1 {
+  letter-spacing: 0.5px;
+  color: #1e293b;
+}
+
+.logout-btn {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  padding: 9px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  box-shadow: 0 6px 14px rgba(239,68,68,0.35);
+  transition: 0.3s;
+}
+
+.logout-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(239,68,68,0.55);
+}
+
+/* ================= BACK BUTTON ================= */
+.btn-back {
+  display: inline-block;
+  margin-bottom: 15px;
+  padding: 9px 16px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #0f766e, #14b8a6);
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+  transition: 0.3s ease;
+}
+
+.btn-back::before {
+  content: "⬅ ";
+}
+
+.btn-back:hover {
+  transform: translateX(-3px) scale(1.04);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.4);
+}
+
+/* ================= CARD ELEVATION ================= */
+.card {
+  transition: 0.3s;
+}
+
+.card:hover {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.18);
+}
+
+/* ================= FILTER UI ================= */
+.filter-box select {
+  border: 2px solid #e5e7eb;
+  transition: 0.25s;
+}
+
+.filter-box select:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79,70,229,0.2);
+  outline: none;
+}
+
+/* ================= TABLE ENHANCEMENTS ================= */
+table thead th {
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.6px;
+}
+
+tbody tr {
+  transition: 0.25s ease;
+}
+
+tbody tr:hover {
+  background: linear-gradient(90deg, #eef2ff, #ffffff);
+  transform: scale(1.005);
+}
+
+/* ================= VOTE COUNT BADGE ================= */
+tbody td:last-child {
+  font-weight: 700;
+  color: #1e40af;
+}
+
+tbody td:last-child::after {
+  content: " votes";
+  font-size: 12px;
+  color: #64748b;
+  margin-left: 4px;
+}
+
+/* ================= PAGINATION UPGRADE ================= */
+.page-btn {
+  box-shadow: 0 6px 14px rgba(79,70,229,0.3);
+}
+
+.page-btn.active {
+  box-shadow: 0 0 14px rgba(16,185,129,0.7);
+}
+
+/* ================= CUSTOM SCROLLBAR ================= */
+::-webkit-scrollbar {
+  width: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: #eef1f7;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #4f46e5, #10b981);
+  border-radius: 10px;
+}
+
+/* ================= MOBILE IMPROVEMENTS ================= */
+@media (max-width: 600px) {
+  .header {
+    flex-direction: column;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .filter-box {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-box button {
+    width: 100%;
+  }
+
+  table {
+    font-size: 13px;
+  }
+
+  .btn-back {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="main">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>Employee Voting</h1>
+    <form method="POST" action="/logout/" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">Logout</button>
+    </form>
+  </div>
+
+  {% if request.user.role == 1 %}<br>
+        <a href="/admin_dashboard/" class="btn-back">Back to Dashboard</a>
+    
+    {% elif request.user.role == 2 %}<br>
+        <a href="/hr_dashboard/?month={{current_month}}#monthly-summary/"btn-back">Back to Dashboard</a>
+    {% endif %}
+
+  <div class="card">
+
+    <!-- Month Filter -->
+    <form method="GET" class="filter-box">
+      <label><strong>Select Month:</strong></label>
+      <select name="month" class="month-select" required>
+        <option value="1" {% if selected_month == 1 %}selected{% endif %}>January</option>
+        <option value="2" {% if selected_month == 2 %}selected{% endif %}>February</option>
+        <option value="3" {% if selected_month == 3 %}selected{% endif %}>March</option>
+        <option value="4" {% if selected_month == 4 %}selected{% endif %}>April</option>
+        <option value="5" {% if selected_month == 5 %}selected{% endif %}>May</option>
+        <option value="6" {% if selected_month == 6 %}selected{% endif %}>June</option>
+        <option value="7" {% if selected_month == 7 %}selected{% endif %}>July</option>
+        <option value="8" {% if selected_month == 8 %}selected{% endif %}>August</option>
+        <option value="9" {% if selected_month == 9 %}selected{% endif %}>September</option>
+        <option value="10" {% if selected_month == 10 %}selected{% endif %}>October</option>
+        <option value="11" {% if selected_month == 11 %}selected{% endif %}>November</option>
+        <option value="12" {% if selected_month == 12 %}selected{% endif %}>December</option>
+      </select>
+
+      <button type="submit">
+        <i class="fas fa-filter"></i> Filter
+      </button>
+    </form>
+
+    <!-- Voting Table -->
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Employee Name</th>
+          <th>Email</th>
+          <th>Total Votes</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for row in votes %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ row.vote_for__first_name }}</td>
+          <td>{{ row.vote_for__email }}</td>
+          <td>{{ row.total_votes }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4" class="empty">No voting data found for this month</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- ✅ PAGINATION -->
+    <div class="pagination-row">
+
+      {% if votes.has_previous %}
+        <a class="page-btn" href="?month={{ selected_month }}&page={{ votes.previous_page_number }}">⬅ Prev</a>
+      {% endif %}
+
+      <span class="page-btn active">
+        Page {{ votes.number }} of {{ votes.paginator.num_pages }}
+      </span>
+
+      {% if votes.has_next %}
+        <a class="page-btn" href="?month={{ selected_month }}&page={{ votes.next_page_number }}">Next ➡</a>
+      {% endif %}
+
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>
